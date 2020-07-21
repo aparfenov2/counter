@@ -3,7 +3,7 @@ set -ex
 env
 
 [ -d '.env3' ] || {
-    /opt/conda/bin/python3.7 -m venv .env3
+    /opt/conda/bin/python3.7 -m venv .env3 --system-site-packages
 }
 . .env3/bin/activate
 cd yolov5
