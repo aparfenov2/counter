@@ -27,11 +27,11 @@ cd yolov5
 ln -s /root/data/digits data/digits || true
 ls -l data/digits
 
-python -m pip install -r requirements.txt
+# python -m pip install -r requirements.txt
 
-# apt update
-# apt install -y libglib2.0-0
-# apt install -y libsm6 libxext6
-# apt install -y libxrender-dev
+apt update
+apt install -y libglib2.0-0
+apt install -y libsm6 libxext6
+apt install -y libxrender-dev
 
 python train.py --img 640 --batch 16 --epochs 5 --data ./data/digits.yaml --cfg ./models/digits.yaml --weights ''
