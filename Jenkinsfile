@@ -45,10 +45,10 @@ export GIT_SSH_COMMAND="ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChec
     git checkout ${BRANCH_NAME}
 }
 cd ${WORKDIR}
-echo BRANCH_NAME="${BRANCH_NAME}" > jenkins_env.sh
-echo CMDLINE="${CMDLINE}" >> jenkins_env.sh
-echo WORKDIR="${WORKDIR}" >> jenkins_env.sh
-echo EXPERIMENT_NAME="${EXPERIMENT_NAME}" >> jenkins_env.sh
+echo BRANCH_NAME=\\\"${BRANCH_NAME}\\\" > jenkins_env.sh
+echo CMDLINE=\\\"${CMDLINE}\\\" >> jenkins_env.sh
+echo WORKDIR=\\\"${WORKDIR}\\\" >> jenkins_env.sh
+echo EXPERIMENT_NAME=\\\"${EXPERIMENT_NAME}\\\" >> jenkins_env.sh
 
 git pull
 
