@@ -1,7 +1,7 @@
 set -ex
 . ./jenkins_env.sh
 env
-
+PATH=$PATH:/opt/conda/bin:/usr/local/nvidia/bin:/usr/local/cuda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 conda update -yn base -c defaults conda
 conda install -yc anaconda numpy opencv matplotlib tqdm pillow ipython
 conda install -yc conda-forge scikit-image pycocotools tensorboard
