@@ -3,17 +3,21 @@ pipeline {
     
     parameters {
         string (name: 'EXPERIMENT_NAME', defaultValue: 'default_experiment')
-        string (name: 'BRANCH_NAME', defaultValue: 'aparfenov/try_jenkins')
-        string (name: 'CMDLINE', defaultValue: 'echo hello')
+        string (name: 'BRANCH_NAME', defaultValue: 'develop')
+        string (name: 'SSH_HOST', defaultValue: 'ssh4.vast.io')
+        string (name: 'SSH_PORT', defaultValue: '17000')
+        string (name: 'CMDLINE', defaultValue: 'jenkins_entry.sh')
         booleanParam (name : 'DELETE_IF_EXIST', defaultValue: false, description: 'delete experiment directory if exists')
         choice (name: 'EXECUTION_QUEUE', choices: ['queue1', 'queue2', 'queue3', 'queue4'])
     }
 
     environment {
-        EXPERIMENT_DIR="/mnt/xvdf1/data/jenkins_experiments"
+        EXPERIMENT_DIR="jenkins_experiments"
         EXPERIMENT_NAME="${EXPERIMENT_NAME.trim()}"
         WORKDIR="${EXPERIMENT_DIR}/${EXPERIMENT_NAME.trim()}"
         CMDLINE="${CMDLINE.trim()}"
+        SSH_HOST="${SSH_HOST.trim()}"
+        SSH_PORT="${SSH_PORT.trim()}"
         BRANCH_NAME="${BRANCH_NAME.trim()}"
         DELETE_IF_EXIST="${DELETE_IF_EXIST}"
     }
@@ -44,7 +48,7 @@ pipeline {
                                         reference: '',
                                         trackingSubmodules: false]
                                     ],
-                                userRemoteConfigs: [[url: 'git@github.com:kantengri/3dmg.git', credentialsId:'github']]
+                                userRemoteConfigs: [[url: 'git@github.com:kantengri/counter.git', credentialsId:'local']]
                             ])                       
                             // sh("git checkout ${BRANCH_NAME}")
                             sh "echo BRANCH_NAME=\\\"${BRANCH_NAME}\\\" > jenkins_env.sh"
@@ -54,7 +58,7 @@ pipeline {
 
                         }
                         sshagent (credentials: ['localhost']) {
-                            sh "echo 'cd ${WORKDIR}; ${CMDLINE}' | ssh ubuntu@localhost bash -s"
+                            sh "echo 'cd ${WORKDIR}; ${CMDLINE}' | ssh -p ${SSH_PORT} ubuntu@${SSH_HOST} bash -s"
                         }
                     }
                 }
