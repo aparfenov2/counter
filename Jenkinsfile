@@ -12,9 +12,9 @@ pipeline {
     }
 
     environment {
-        EXPERIMENT_DIR="jenkins_experiments"
+        EXPERIMENT_DIR="/root/jenkins_experiments"
         EXPERIMENT_NAME="${EXPERIMENT_NAME.trim()}"
-        WORKDIR="/root/${EXPERIMENT_DIR}/${EXPERIMENT_NAME.trim()}"
+        WORKDIR="${EXPERIMENT_DIR}/${EXPERIMENT_NAME.trim()}"
         CMDLINE="${CMDLINE.trim()}"
         SSH_HOST="${SSH_HOST.trim()}"
         SSH_PORT="${SSH_PORT.trim()}"
