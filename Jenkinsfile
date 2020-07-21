@@ -30,38 +30,36 @@ pipeline {
                 
                 lock(resource: env.EXECUTION_QUEUE, quantity:1, inversePrecedence: true) {
                     script {
-                        if (env.DELETE_IF_EXIST == 'true') {
-                            echo "deleting existing experiment directory"
-                            sh "rm -rf ${WORKDIR}"
-                        }
-                        sh "mkdir ${WORKDIR}"
+                        sshagent (credentials: ['inst']) {
+sh '''
+ssh -p ${SSH_PORT} root@${SSH_HOST} 'bash -s << 'ENDSSH'
 
-                        dir("${WORKDIR}") {
-                            checkout([
-                                $class: 'GitSCM', branches: [[name: BRANCH_NAME]],
-                                extensions: [
-                                    [$class: 'CloneOption', noTags: true, reference: '', shallow: true],
-                                    [$class: 'SubmoduleOption',
-                                        disableSubmodules: false,
-                                        parentCredentials: true,
-                                        recursiveSubmodules: true,
-                                        reference: '',
-                                        trackingSubmodules: false]
-                                    ],
-                                userRemoteConfigs: [[url: 'git@github.com:kantengri/counter.git', credentialsId:'local']]
-                            ])                       
-                            // sh("git checkout ${BRANCH_NAME}")
-                            sh "echo BRANCH_NAME=\\\"${BRANCH_NAME}\\\" > jenkins_env.sh"
-                            sh "echo CMDLINE=\\\"${CMDLINE}\\\" >> jenkins_env.sh"
-                            sh "echo WORKDIR=\\\"${WORKDIR}\\\" >> jenkins_env.sh"
-                            sh "echo EXPERIMENT_NAME=\\\"${EXPERIMENT_NAME}\\\" >> jenkins_env.sh"
+echo BRANCH_NAME="${BRANCH_NAME}" > jenkins_env.sh
+echo CMDLINE="${CMDLINE}" >> jenkins_env.sh
+echo WORKDIR="${WORKDIR}" >> jenkins_env.sh
+echo EXPERIMENT_NAME="${EXPERIMENT_NAME}" >> jenkins_env.sh
 
-                        }
-                        sshagent (credentials: ['localhost']) {
-                            sh "echo 'cd ${WORKDIR}; ${CMDLINE}' | ssh -p ${SSH_PORT} root@${SSH_HOST} bash -s"
-                        }
-                    }
-                }
+[ ${DELETE_IF_EXIST} == 'true' ] && {
+    echo "deleting existing experiment directory"
+    rm -rf ${WORKDIR} || true
+}
+[ -d "${WORKDIR}" ] || {
+    mkdir -p ${WORKDIR}
+    cd ${WORKDIR}
+    GIT_SSH_COMMAND="ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no" git clone git@github.com:kantengri/counter.git .
+    git checkout ${BRANCH_NAME}
+}
+cd ${WORKDIR}
+git pull
+
+${CMDLINE}
+
+ENDSSH'
+     '''
+
+                        } // sshagent
+                    } // script
+                } // lock
             }
         }
     }
