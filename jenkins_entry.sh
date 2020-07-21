@@ -10,7 +10,6 @@ cd yolov5
     echo "train dataset not found"
     exit 1
 }
-
 ln -s ../data/digits data/digits || true
 
 python -m pip install -r requirements.txt
