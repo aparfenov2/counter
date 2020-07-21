@@ -4,7 +4,7 @@ pipeline {
     parameters {
         string (name: 'EXPERIMENT_NAME', defaultValue: 'default_experiment')
         string (name: 'BRANCH_NAME', defaultValue: 'develop')
-        string (name: 'SSH_HOST', defaultValue: 'ssh4.vast.io')
+        string (name: 'SSH_HOST', defaultValue: 'ssh4.vast.ai')
         string (name: 'SSH_PORT', defaultValue: '17000')
         string (name: 'CMDLINE', defaultValue: 'jenkins_entry.sh')
         booleanParam (name : 'DELETE_IF_EXIST', defaultValue: false, description: 'delete experiment directory if exists')
@@ -58,7 +58,7 @@ pipeline {
 
                         }
                         sshagent (credentials: ['localhost']) {
-                            sh "echo 'cd ${WORKDIR}; ${CMDLINE}' | ssh -p ${SSH_PORT} ubuntu@${SSH_HOST} bash -s"
+                            sh "echo 'cd ${WORKDIR}; ${CMDLINE}' | ssh -p ${SSH_PORT} root@${SSH_HOST} bash -s"
                         }
                     }
                 }
