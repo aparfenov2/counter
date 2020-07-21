@@ -8,16 +8,16 @@ env
 . .env3/bin/activate
 cd yolov5
 
-[ -d '../data/digits' ] || {
+[ -d '/root/data/digits' ] || {
     echo "train dataset not found - trying download"
-    mkdir -p ../data || true
-    cd ../data
+    mkdir -p /root/data || true
+    cd /root/data
     scp pi@kantengri.ddns.net:digits.tgz .
     tar xvf digits.tgz
     ls -l
-    cd ../yolov5 
+    cd ${WORKDIR}/yolov5
 }
-ln -s ../data/digits data/digits || true
+ln -s /root/data/digits data/digits || true
 ls -l data/digits
 python -m pip install -r requirements.txt
 # bash train.sh
