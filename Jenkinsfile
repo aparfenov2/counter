@@ -38,6 +38,9 @@ export GIT_SSH_COMMAND="ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChec
     echo "deleting existing experiment directory"
     rm -rf ${WORKDIR} || true
 }
+command -v git >/dev/null 2>&1 || {
+    apt update && apt install -y git
+}
 [ -d "${WORKDIR}" ] || {
     mkdir -p ${WORKDIR}
     cd ${WORKDIR}
