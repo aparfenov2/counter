@@ -1,8 +1,8 @@
-set -ex
+set -e
 [ -f "./jenkins_env.sh" ] && {
     . ./jenkins_env.sh
 }
-env
+# env
 EPOCHS=5
 BATCH=16
 EVAL=
@@ -55,7 +55,11 @@ echo EVAL=$EVAL
 }
 
 [ -n "${RUN_IN_DOCKER}" ] && [ -z "${IN_DOCKER}" ] && {
-    docker run -ti --rm ${DOCKER_IMAGE} bash ./$0 --in_docker "${POSITIONAL[@]}"
+    docker run -ti --rm \
+        --name ${EXPERIMENT_NAME} \
+        -v $PWD:/cdir \
+        -w /cdir \
+        ${DOCKER_IMAGE} bash ./$0 --in_docker "${POSITIONAL[@]}"
     exit 0
 }
 
