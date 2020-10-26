@@ -85,7 +85,7 @@ cd yolov5
         echo "train dataset not found - trying download"
         mkdir -p /root/data || true
         cd /root/data
-        wget http://kan-rt.ddns.net:18000/numbers.tgz .
+        wget http://kan-rt.ddns.net:18000/numbers.tgz -O numbers.tgz        
         tar xvf numbers.tgz
         ls -l
         cd ${WORKDIR}/yolov5
