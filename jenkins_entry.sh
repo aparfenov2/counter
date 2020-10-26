@@ -76,7 +76,7 @@ PATH=$PATH:/opt/conda/bin:/usr/local/nvidia/bin:/usr/local/cuda/bin:/usr/local/s
     }
 }
 
-PYTHON=/opt/conda/bin/python3.7
+PYTHON=/opt/conda/bin/python3.6
 # . .env3/bin/activate
 cd yolov5
 
