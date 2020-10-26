@@ -46,6 +46,8 @@ echo PREPARE_ENV=${PREPARE_ENV}
 echo EPOCHS=$EPOCHS
 echo BATCH=$BATCH
 echo EVAL=$EVAL
+WORKDIR=$PWD
+echo WORKDIR=$WORKDIR
 
 [ -n "${DOCKER_BUID}" ] && [ -z "${IN_DOCKER}" ] && {
     docker build -t ${DOCKER_IMAGE} -f ${DOCKER_FILE} .
@@ -78,17 +80,19 @@ PYTHON=/opt/conda/bin/python3.7
 # . .env3/bin/activate
 cd yolov5
 
-[ -d '/root/data/digits' ] || {
-    echo "train dataset not found - trying download"
-    mkdir -p /root/data || true
-    cd /root/data
-    wget http://kan-rt.ddns.net:8000/numbers.tgz .
-    tar xvf numbers.tgz
-    ls -l
-    cd ${WORKDIR}/yolov5
+[ -d 'data/digits' ] || {
+    [ -d '/root/data/digits' ] || {
+        echo "train dataset not found - trying download"
+        mkdir -p /root/data || true
+        cd /root/data
+        wget http://kan-rt.ddns.net:18000/numbers.tgz .
+        tar xvf numbers.tgz
+        ls -l
+        cd ${WORKDIR}/yolov5
+    }
+    ln -s /root/data/digits data/digits || true
+    ls -l data/digits
 }
-ln -s /root/data/digits data/digits || true
-ls -l data/digits
 
 [ -n "${EVAL}" ] && {
     echo "eval mode ! Not implemented"
@@ -96,5 +100,5 @@ ls -l data/digits
 }
 
 [ -n "${TRAIN}" ] && {
-    $PYTHON train.py --img 640 --batch $BATCH --epochs $EPOCHS --data ./data/digits.yaml --cfg ./models/digits.yaml --weights ''
+    $PYTHON train.py --img 128 --batch $BATCH --epochs $EPOCHS --data ./data/digits.yaml --cfg ./models/digits.yaml --weights ''
 }
